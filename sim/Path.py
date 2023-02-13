@@ -1,4 +1,4 @@
-class Path():
+class Path:
     def __init__(self, links, channelList, modulation):
         self.links = links
         self.channelList = channelList

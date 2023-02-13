@@ -1,7 +1,10 @@
-class WeightedGraph():
+import numpy as np
+
+
+class WeightedGraph:
     def __init__(self, n):
         self.numNodes = n
-        self.edges = []
+        self.edges = np.full((self.numNodes, self.numNodes), 10, dtype=float)
         for c in range(n):
             edgeslinha = []
             for d in range(n):
@@ -20,8 +23,11 @@ class WeightedGraph():
             counter += 1
         return answer
 
-    def size(self):
+    def getNumNodes(self):
         return self.numNodes
+
+    def getNumEdges(self):
+        return len(self.edges)
 
     def getWeight(self, source, destination):
         return self.edges[source][destination]

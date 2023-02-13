@@ -1,27 +1,27 @@
-class Link():
-    def __init__(self, xml, cores, slots):
-        # TODO: Adicionar o tipo de cada uma variável
-        self.id = int(xml.attrib["id"])
-        self.src = int(xml.attrib["source"])
-        self.dst = int(xml.attrib["destination"])
-        self.delay = float(xml.attrib["delay"])
-        self.bandwidth = float(xml.attrib["bandwidth"])
-        self.weight = float(xml.attrib["weight"])
-        # TODO: slots and cores
-        self.freeSlots = []
-        self.modulationLevel = []
+import numpy as np
 
-        # TODO: Modificar o tipo de cores e slots
-        for c in range(cores):
-            unit = []
-            mod = []
-            for s in range(slots):
-                unit.append(True)
-                mod.append(-1)
-            self.freeSlots.append(unit)
-            self.modulationLevel.append(mod)
 
-    # TODO: Revisar Multideclaração
+class Link:
+    def __init__(self, link, cores, slots):
+        self.cores = cores
+        self.slots = slots
+
+        self.id = int(link['id'])
+        self.src = int(link['source'])
+        self.dst = int(link['destination'])
+        self.delay = float(link['delay'])
+        self.bandwidth = float(link['bandwidth'])
+        self.weight = float(link['weight'])
+        # TODO: Verificar as situações onde weight e distance não são a mesma coisa
+        self.distance = float(link['weight'])
+
+        self.active = True
+
+        self.freeSlots = np.ones((self.cores, self.slots), dtype=bool)
+        self.canBeShared = np.ones((self.cores, self.slots), dtype=bool)
+
+        self.modulationLevel = np.full((self.cores, self.slots), 10, dtype=float)
+        self.noise = np.full((self.cores, self.slots), 10, dtype=float)
 
     def getSpectrum(self, *args):
         if len(args) == 0:

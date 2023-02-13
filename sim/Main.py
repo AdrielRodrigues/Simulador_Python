@@ -1,18 +1,17 @@
 import sys
-import Simulator
+from Simulator import Simulator
 
 
 def main():
     print(sys.argv)
-    # List size: XML seed [-trace] [-verbose] [-failure] [minload maxload step]
     args_size = len(sys.argv)
     usage = 'Usage: flexgridsim [simulation_file] [seed] [minload maxload step] [-trace] [-verbose] [-failure]'
+
     trace = False
-    # TODO: Avaliar remover o Verbose
     verbose = False
     failure = False
 
-    if args_size <= 5 or args_size > 9:
+    if args_size < 6 or args_size > 9:
         print(usage)
         exit(0)
     else:
@@ -30,7 +29,6 @@ def main():
             failure = True
 
         for load in range(minload, maxload + step, step):
-            # TODO: Verificar as importações, colocar em pacotes, etc...
             sim = Simulator()
             sim.execute(simConfigFile, trace, verbose, failure, load, seed)
 

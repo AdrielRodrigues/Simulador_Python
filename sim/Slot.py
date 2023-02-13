@@ -1,4 +1,4 @@
-class Slot():
+class Slot:
     def __init__(self, core, slot, link):
         self.core = core
         self.slot = slot

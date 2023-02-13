@@ -1,4 +1,4 @@
-class Event():
+class Event:
     def __init__(self, type, flow, time):
         self.type = type
         self.flow = flow

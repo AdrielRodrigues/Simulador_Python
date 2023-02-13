@@ -1,4 +1,4 @@
-class Lightpath():
+class Lightpath:
     def __init__(self, id, source, destination, path, modulationLevel):
         self.id = int(id)
         self.source = int(source)

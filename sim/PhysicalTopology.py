@@ -1,45 +1,38 @@
-# Prováveis problemas com tipo do dado. Ex: str ao invés de int
-import Link
-from util import WeightedGraph
+import numpy as np
+
+from Link import Link
+from util.WeightedGraph import WeightedGraph
 
 
-class PhysicalTopology():
-    def __init__(self, xml):
-        if xml.find('physical-topology'):
-            pt = xml.find('physical-topology')
-            self.name = pt.attrib["name"]
-            self.cores = int(pt.attrib["cores"])
-            self.slots = int(pt.attrib["slots"])
-            self.protection = bool(pt.attrib["protection"])
-            self.sharing = bool(pt.attrib["sharing"])
-            self.grooming = bool(pt.attrib["grooming"])
-            self.slotsBandwidth = float(pt.attrib["slotsBandwidth"])
+class PhysicalTopology:
+    def __init__(self, pt):
+        self.name = str(pt['name'])
+        self.cores = int(pt['cores'])
+        self.slots = int(pt['slots'])
+        self.protection = bool(pt['protection'])
+        self.sharing = bool(pt['sharing'])
+        self.grooming = bool(pt['grooming'])
+        self.slotsBandwidth = float(pt['slotsBandwidth'])
 
-            self.nodes = []
-            self.links = []
-            self.matrix = []
+        # Sequência numérica de nós
+        self.nodes = []
 
-            # TODO: Adicionar os elementos como Class em cada lista
-            for elem in pt:
-                for node in elem.iter('node'):
-                    self.nodes.append(node)
-                for link in elem.iter('link'):
-                    self.links.append(Link(link, self.cores, self.slots))
+        for node in pt['nodes']:
+            self.nodes.append(int(node))
 
-            for e in range(len(self.nodes)):
-                linhaMatrix = []
-                for f in range(len(self.nodes)):
-                    linhaMatrix.append(None)
-                self.matrix.append(linhaMatrix)
+        self.n_nodes = len(self.nodes)
 
-            for l in self.links:
-                self.matrix[l.getSource()][l.getDestination()] = l
+        # Links em sequência e matriz adj
+        self.links = []
+        self.matrix = np.empty((self.n_nodes, self.n_nodes), dtype=Link)
 
+        for link in pt['links']:
+            obj = Link(link, self.cores, self.slots)
+            self.links.append(obj)
+            self.matrix[int(link['source'])][int(link['destination'])] = obj
 
-            self.graph = self.doWeightedGraph()
-        else:
-            # TODO: Lidar com a exceção
-            print("ERROR")
+        # Grafo
+        self.graph = self.doWeightedGraph()
 
     def getGrooming(self):
         return self.grooming
@@ -48,7 +41,7 @@ class PhysicalTopology():
         return self.protection
 
     def getNumNodes(self):
-        return len(self.nodes)
+        return self.n_nodes
 
     def getNumCores(self):
         return self.cores
@@ -69,7 +62,7 @@ class PhysicalTopology():
             return self.matrix[args[0]][args[1]]
 
     def doWeightedGraph(self):
-        g = WeightedGraph(len(self.nodes))
+        g = WeightedGraph(self.n_nodes)
         for i in range(len(self.nodes)):
             for j in range(len(self.nodes)):
                 if self.matrix[i][j] is not None:

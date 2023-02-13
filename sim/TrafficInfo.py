@@ -1,4 +1,4 @@
-class TrafficInfo():
+class TrafficInfo:
     def __init__(self, holdingTime, rate, cos, weight):
         self.holdingTime = holdingTime
         self.rate = rate

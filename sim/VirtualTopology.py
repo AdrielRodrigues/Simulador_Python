@@ -3,7 +3,7 @@
 import Lightpath
 
 
-class VirtualTopology():
+class VirtualTopology:
     def __init__(self, xml, pt):
         if xml.find('virtual-topology'):
             vt = xml.find('virtual-topology')
