@@ -4,12 +4,9 @@ import numpy as np
 class WeightedGraph:
     def __init__(self, n):
         self.numNodes = n
-        self.edges = np.full((self.numNodes, self.numNodes), 10, dtype=float)
-        for c in range(n):
-            edgeslinha = []
-            for d in range(n):
-                edgeslinha.append(None)
-            self.edges.append(edgeslinha)
+        self.edges = np.full((self.numNodes, self.numNodes), 0, dtype=float)
+        self.edgeRemoved = np.full((self.numNodes, self.numNodes), False, dtype=bool)
+        visited = []
 
     def addEdge(self, source, destination, weight):
         self.edges[source][destination] = weight

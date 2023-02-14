@@ -3,7 +3,8 @@ import inspect
 from util import KShortestPath as KSP
 import Path
 
-class ControlPlane():
+
+class ControlPlane:
     # def __init__(self, xml, events, rsa, pt, vt, traffic):
     def __init__(self, rsa, pt, vt):
         self.rsa = None

@@ -6,6 +6,9 @@ class Lightpath:
         self.path = path
         self.modulationLevel = int(modulationLevel)
 
+    def __lt__(self, other):
+        return self.getID() < other.getID()
+
     def getID(self):
         return self.id
 

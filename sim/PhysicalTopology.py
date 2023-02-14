@@ -34,6 +34,9 @@ class PhysicalTopology:
         # Grafo
         self.graph = self.doWeightedGraph()
 
+    def getSharing(self):
+        return self.sharing
+
     def getGrooming(self):
         return self.grooming
 
@@ -56,17 +59,21 @@ class PhysicalTopology:
         return self.slots
 
     def getLink(self, *args):
+        # Array
         if len(args) == 1:
             return self.links[args[0]]
+        # Matrix
         elif len(args) == 2:
             return self.matrix[args[0]][args[1]]
 
     def doWeightedGraph(self):
         g = WeightedGraph(self.n_nodes)
-        for i in range(len(self.nodes)):
-            for j in range(len(self.nodes)):
-                if self.matrix[i][j] is not None:
-                    g.addEdge(i, j, self.matrix[i][j].getWeight())
+        # TODO: Verificar >> Antes usava dois for i,j pra percorrer toda a matrix
+        for link in self.links:
+            source = link.getSource()
+            destination = link.getDestination()
+            weight = link.getWeight()
+            g.addEdge(source, destination, weight)
         return g
 
     def getGraph(self):

@@ -5,10 +5,16 @@ from random import randrange
 from random import uniform
 import random
 from util import Distribution
-import csv
 
-class TrafficGenerator():
-    def __init__(self, xml, load):
+
+class TrafficGenerator:
+    def __init__(self, traffic, load):
+        self.call = int(traffic['call'])
+        self.load = int(traffic['load'])
+        self.maxrate = int(traffic['max-rate'])
+        a = len(traffic['calls'])
+
+
         if xml.find('traffic'):
             traffic = xml.find('traffic')
             self.calls = int(traffic.attrib["calls"])

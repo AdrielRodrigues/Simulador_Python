@@ -5,6 +5,7 @@ from Simulator import Simulator
 def main():
     print(sys.argv)
     args_size = len(sys.argv)
+    # Parameters: ../xml/MSP-nsf.json 10 100 500 50
     usage = 'Usage: flexgridsim [simulation_file] [seed] [minload maxload step] [-trace] [-verbose] [-failure]'
 
     trace = False

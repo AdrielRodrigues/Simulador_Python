@@ -1,5 +1,7 @@
 from PhysicalTopology import PhysicalTopology
 from VirtualTopology import VirtualTopology
+from EventScheduler import EventScheduler
+from TrafficGenerator import TrafficGenerator
 import json
 import time
 '''
@@ -32,6 +34,10 @@ class Simulator:
 
             begin = round(time.time() * 1000)
             vt = VirtualTopology(data['virtual-topology'], pt)
+
+            begin = round(time.time() * 1000)
+            events = EventScheduler()
+            traffic = TrafficGenerator()
 
             file.close()
 

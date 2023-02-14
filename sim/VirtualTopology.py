@@ -4,17 +4,17 @@ import Lightpath
 
 
 class VirtualTopology:
-    def __init__(self, xml, pt):
-        if xml.find('virtual-topology'):
-            vt = xml.find('virtual-topology')
-            self.name = vt.attrib["name"]
+    def __init__(self, vt, pt):
+        self.name = vt['name']
         self.nodes = pt.getNumNodes()
         self.lightpaths = {}
+        # TODO: Entender onde essa estrutura >> adjMatrix << é utilizada
+        self.adjMatrix = [[{} for n in range(self.nodes)] for n in range(self.nodes)]
         self.pt = pt
         self.nextLightpathID = 0
 
     # TODO: Escolher entre ou dar suporte para Path ou Links+Slots
-    def createLightpath(self, path, modulationLevel):
+    def createLightpath(self, path, modulationLevel=0):
         # TODO: Lidar com exceção
 
         if len(path.getLinks()) < 1:
