@@ -4,6 +4,9 @@ class Event:
         self.flow = flow
         self.time = time
 
+    def __lt__(self, other):
+        return self.getTime() < other.getTime()
+
     def getType(self):
         return self.type
 

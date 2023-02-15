@@ -1,7 +1,7 @@
 import random
 from math import log
 
-class Distribution():
+class Distribution:
     def __init__(self, seq_num, seed_num):
         if seq_num < 1 or seq_num > 4 or seed_num < 1 or seed_num > 25:
             exit()

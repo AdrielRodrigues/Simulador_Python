@@ -37,7 +37,8 @@ class Simulator:
 
             begin = round(time.time() * 1000)
             events = EventScheduler()
-            traffic = TrafficGenerator()
+            traffic = TrafficGenerator(data['traffic'], forcedLoad)
+            traffic.generateTraffic(pt, events, seed)
 
             file.close()
 
