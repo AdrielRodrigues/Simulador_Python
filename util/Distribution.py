@@ -1,6 +1,7 @@
 import random
 from math import log
 
+
 class Distribution:
     def __init__(self, seq_num, seed_num):
         if seq_num < 1 or seq_num > 4 or seed_num < 1 or seed_num > 25:
@@ -112,7 +113,7 @@ class Distribution:
 
     def nextExponential(self, b):
         randx = random.random()
-        return (-1 * b * log(randx))
+        return -1 * b * log(randx)
 
     def nextInt(self, num):
         return random.randint(0, num - 1)

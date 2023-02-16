@@ -40,6 +40,7 @@ class Simulator:
             traffic = TrafficGenerator(data['traffic'], forcedLoad)
             traffic.generateTraffic(pt, events, seed)
 
+            events.getEvents().sort()
             file.close()
 
         return 1

@@ -1,6 +1,6 @@
 from TrafficInfo import TrafficInfo
-import Flow
-import Event
+from Flow import Flow
+from Event import ArrivalEvent, DepartureEvent
 from random import randrange
 from random import uniform
 import random
@@ -12,7 +12,7 @@ class TrafficGenerator:
     def __init__(self, traffic, load):
         self.call = int(traffic['call'])
         self.load = int(traffic['load'])
-        self.maxrate = int(traffic['max-rate'])
+        self.maxRate = int(traffic['max-rate'])
         self.n_types = len(traffic['calls'])
 
         self.totalWeight = 0
@@ -22,7 +22,7 @@ class TrafficGenerator:
         self.callsType = np.empty((self.n_types,), dtype=TrafficInfo)
 
         for call in traffic['calls']:
-            self.totalWeight += float(call['weight'])
+            self.totalWeight += int(call['weight'])
 
         count = 0
         for call in traffic['calls']:
@@ -38,7 +38,14 @@ class TrafficGenerator:
             count += 1
 
     def generateTraffic(self, pt, events, seed):
-        self.meanArrivalTime = self.holdingTime * (self.meanRate/self.maxrate) / self.load
+        weightVector = np.empty((self.totalWeight,), dtype=int)
+        aux = 0
+        for i in range(self.n_types):
+            for j in range(self.callsType[i].getWeight()):
+                weightVector[aux] = i
+                aux += 1
+
+        meanArrivalTime = self.meanHoldingTime * (self.meanRate/self.maxRate) / self.load
         time = 0
         id = 0
         numNodes = pt.getNumNodes()
@@ -48,3 +55,19 @@ class TrafficGenerator:
         dist4 = Distribution(4, seed)
 
         for i in range(self.call):
+            type = weightVector[dist1.nextInt(self.totalWeight)]
+            src = dst = dist2.nextInt(numNodes)
+            while src == dst:
+                dst = dist2.nextInt(numNodes)
+
+            holdingTime = dist4.nextExponential(self.callsType[type].getHoldingTime())
+            newFlow = Flow(id, src, dst, time, self.callsType[type].getRate(), holdingTime,
+                           self.callsType[type].getCos(), time+(holdingTime*0.5))
+
+            # TODO: Herança para os tipos FlowArrivalEvent e FlowDepartureEvent
+            event = ArrivalEvent('Arrival', newFlow, time)
+            time += dist3.nextExponential(meanArrivalTime)
+            events.addEvent(event)
+            event = DepartureEvent('Departure', newFlow, time+holdingTime)
+            events.addEvent(event)
+            id += 1

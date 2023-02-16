@@ -18,8 +18,8 @@ def main():
     else:
         simConfigFile = sys.argv[1]
         seed = int(sys.argv[2])
-        minload = int(sys.argv[3])
-        maxload = int(sys.argv[4])
+        minLoad = int(sys.argv[3])
+        maxLoad = int(sys.argv[4])
         step = int(sys.argv[5])
 
         if 'trace' in sys.argv:
@@ -29,7 +29,7 @@ def main():
         if 'failure' in sys.argv:
             failure = True
 
-        for load in range(minload, maxload + step, step):
+        for load in range(minLoad, maxLoad + step, step):
             sim = Simulator()
             sim.execute(simConfigFile, trace, verbose, failure, load, seed)
 
