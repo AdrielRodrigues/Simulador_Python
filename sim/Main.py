@@ -3,19 +3,25 @@ import os
 from typing import List, Optional
 from Simulator import Simulator
 
+
 class Main:
     @staticmethod
     def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
-        parser = argparse.ArgumentParser(description='Simulator for elastic optical networks with spatial division multiplexing')
+        parser = argparse.ArgumentParser(
+            description='Simulator for Space Division Multiplexing Elastic Optical Networks')
 
-        parser.add_argument('simConfigFile', type=str, help='Simulation configuration file')
-        parser.add_argument('seed', type=int, help='Seed for random number generator')
+        parser.add_argument('simConfigFile', type=str,
+                            help='Simulation configuration file')
+        parser.add_argument(
+            'seeds', type=int, help='Number of seeds for random number generator')
 
-        group = parser.add_mutually_exclusive_group(required=False)
-        group.add_argument('-t', '--trace', action='store_true', help='Enable trace')
-        group.add_argument('-v', '--verbose', action='store_true', help='Enable verbose output')
+        parser.add_argument(
+            '-t', '--trace', action='store_true', help='Enable trace')
+        parser.add_argument('-v', '--verbose',
+                            action='store_true', help='Enable verbose output')
 
-        parser.add_argument('-f', '--failure', action='store_true', help='Enable link failure simulation')
+        parser.add_argument('-f', '--failure', action='store_true',
+                            help='Enable network failure simulation')
         parser.add_argument('--minload', type=int, help='Minimum load')
         parser.add_argument('--maxload', type=int, help='Maximum load')
         parser.add_argument('--step', type=int, help='Load step')
@@ -43,29 +49,31 @@ class Main:
             return
 
         sim_config_file = args.simConfigFile
-        seed = args.seed
+        seeds = args.seeds
         trace = args.trace
         verbose = args.verbose
         failure = args.failure
 
-        minload = args.minload
-        maxload = args.maxload
+        min_load = args.minload
+        max_load = args.maxload
         step = args.step
 
-        if minload is None:
-            minload = 0
-        if maxload is None:
-            maxload = 0
+        if min_load is None:
+            min_load = 0
+        if max_load is None:
+            max_load = 0
         if step is None:
             step = 1
 
-        for load in range(minload, maxload + step, step):
-            try:
-                sim = Simulator()
-                sim.execute(sim_config_file, trace, verbose, failure, load, seed)
-            except Exception as e:
-                print(f"Error executing simulation: {e}")
-                return
+        for load in range(min_load, max_load + step, step):
+            # try:
+            sim = Simulator()
+            sim.execute(sim_config_file, seeds, trace,
+                        verbose, failure, load)
+            # except Exception as e:
+            #     print(f"Error executing simulation: {e}")
+            #     return
+
 
 if __name__ == '__main__':
     args = Main.parse_args()
