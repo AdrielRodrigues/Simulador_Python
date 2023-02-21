@@ -27,9 +27,9 @@ class rsa():
         id = self.vt.createLightpath(path, 0)
 
         if id >= 0:
-            flow.setLinks(path.getLinks())
-            flow.setSlotList(path.getSlotList())
-            flow.setModulation(path.getModulation())
+            flow.setLinks(path.get_links())
+            flow.setSlotList(path.get_slot_list())
+            flow.setModulation(path.get_modulation())
             lightpath = []
             lightpath.append(self.vt.getLightPath(id))
             if not self.cp.acceptFlow(flow.getID(), lightpath):
