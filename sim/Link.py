@@ -17,45 +17,46 @@ class Link:
 
         self.active = True
 
-        self.freeSlots = np.ones((self.cores, self.slots), dtype=bool)
-        self.canBeShared = np.ones((self.cores, self.slots), dtype=bool)
+        self.free_slots = np.ones((self.cores, self.slots), dtype=bool)
+        self.can_be_shared = np.ones((self.cores, self.slots), dtype=bool)
 
-        self.modulationLevel = np.full((self.cores, self.slots), 10, dtype=float)
+        self.modulation_level = np.full(
+            (self.cores, self.slots), 10, dtype=float)
         self.noise = np.full((self.cores, self.slots), 10, dtype=float)
 
-    def getSpectrum(self, *args):
+    def get_spectrum(self, *args):
         if len(args) == 0:
-            return self.freeSlots
+            return self.free_slots
         elif len(args) == 1:
-            return self.freeSlots[args[0]]
+            return self.free_slots[args[0]]
         elif len(args) == 2:
-            return self.freeSlots[args[0]][args[1]]
+            return self.free_slots[args[0]][args[1]]
 
-    def getID(self):
+    def get_id(self):
         return self.id
 
-    def getSource(self):
+    def get_source(self):
         return self.src
 
-    def getDestination(self):
+    def get_destination(self):
         return self.dst
 
-    def getWeight(self):
+    def get_weight(self):
         return self.weight
 
-    def getDelay(self):
+    def get_delay(self):
         return self.delay
 
-    def isSlotAvailable(self, slot):
-        if self.freeSlots[slot.getCore()][slot.getSlot()]:
+    def is_slot_available(self, slot):
+        if self.free_slots[slot.getCore()][slot.getSlot()]:
             return True
         return False
 
-    def reserveSlot(self, slot):
-        self.freeSlots[slot.getCore()][slot.getSlot()] = False
+    def reserve_slot(self, slot):
+        self.free_slots[slot.getCore()][slot.getSlot()] = False
 
-    def releaseSlot(self, slot):
-        self.freeSlots[slot.getCore()][slot.getSlot()] = True
+    def release_slot(self, slot):
+        self.free_slots[slot.getCore()][slot.getSlot()] = True
 
-    def setModulationLevel(self, slot, modulation):
-        self.modulationLevel[slot.getCore()][slot.getSlot()] = modulation
+    def set_modulation_level(self, slot, modulation):
+        self.modulation_level[slot.getCore()][slot.getSlot()] = modulation
