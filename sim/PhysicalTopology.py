@@ -1,18 +1,18 @@
 import numpy as np
-
+import json
 from Link import Link
 from util.WeightedGraph import WeightedGraph
 
 
 class PhysicalTopology:
-    def __init__(self, pt):
+    def __init__(self, pt: json):
         self.name = str(pt['name'])
         self.cores = int(pt['cores'])
         self.slots = int(pt['slots'])
         self.protection = bool(pt['protection'])
         self.sharing = bool(pt['sharing'])
         self.grooming = bool(pt['grooming'])
-        self.slotsBandwidth = float(pt['slotsBandwidth'])
+        self.slots_bandwidth = float(pt['slotsBandwidth'])
 
         # Sequência numérica de nós
         self.nodes = []
@@ -20,61 +20,60 @@ class PhysicalTopology:
         for node in pt['nodes']:
             self.nodes.append(int(node))
 
-        self.n_nodes = len(self.nodes)
+        self.num_of_nodes = len(self.nodes)
 
         # Links em sequência e matriz adj
         self.links = []
-        self.matrix = np.empty((self.n_nodes, self.n_nodes), dtype=Link)
+        self.adjacency_matrix = np.empty(
+            (self.num_of_nodes, self.num_of_nodes), dtype=Link)
 
         for link in pt['links']:
-            obj = Link(link, self.cores, self.slots)
-            self.links.append(obj)
-            self.matrix[int(link['source'])][int(link['destination'])] = obj
+            source_node = int(link['source'])
+            destination_node = int(link['destination'])
+
+            current_link = Link(link, self.cores, self.slots)
+            self.links.append(current_link)
+            self.adjacency_matrix[source_node][destination_node] = current_link
 
         # Grafo
-        self.graph = self.doWeightedGraph()
+        self.graph = self.__do_weighted_graph()
 
-    def getSharing(self):
-        return self.sharing
-
-    def getGrooming(self):
+    def get_grooming(self) -> bool:
         return self.grooming
 
-    def getProtection(self):
+    def get_protection(self) -> bool:
         return self.protection
 
-    def getNumNodes(self):
-        return self.n_nodes
+    def get_num_nodes(self) -> int:
+        return self.num_of_nodes
 
-    def getNumCores(self):
+    def get_num_cores(self) -> int:
         return self.cores
 
-    def getSlotsCapacity(self):
-        return self.slotsBandwidth
+    def get_slots_capacity(self) -> float:
+        return self.slots_bandwidth
 
-    def getNumLinks(self):
+    def get_num_links(self) -> int:
         return len(self.links)
 
-    def getNumSlots(self):
+    def get_num_slots(self) -> int:
         return self.slots
 
-    def getLink(self, *args):
-        # Array
+    def get_link(self, *args) -> Link:
         if len(args) == 1:
             return self.links[args[0]]
         # Matrix
         elif len(args) == 2:
-            return self.matrix[args[0]][args[1]]
+            return self.adjacency_matrix[args[0]][args[1]]
 
-    def doWeightedGraph(self):
-        g = WeightedGraph(self.n_nodes)
-        # TODO: Verificar >> Antes usava dois for i,j pra percorrer toda a matrix
-        for link in self.links:
-            source = link.getSource()
-            destination = link.getDestination()
-            weight = link.getWeight()
-            g.addEdge(source, destination, weight)
-        return g
+    def __do_weighted_graph(self) -> WeightedGraph:
+        graph = WeightedGraph(self.num_of_nodes)
+        for i in range(self.num_of_nodes):
+            for j in range(self.num_of_nodes):
+                if self.adjacency_matrix[i][j] is not None:
+                    graph.add_edge(
+                        i, j, self.adjacency_matrix[i][j].get_weight())
+        return graph
 
-    def getGraph(self):
+    def get_graph(self):
         return self.graph
